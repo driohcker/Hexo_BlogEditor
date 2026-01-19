@@ -137,7 +137,7 @@ public class ArticleRow extends JPanel {
         editBtn.addActionListener(e ->{
             //JOptionPane.showMessageDialog(this, "修改文章: " + title)
             EditFragment info_editFragment = new EditFragment();
-            info_editFragment.setData(article, false);
+            info_editFragment.setData(article);
             MainActivity.getInstance().showFragment(info_editFragment);
 
         });

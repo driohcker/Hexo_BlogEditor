@@ -5,6 +5,7 @@ import org.sxi.dao.PropertiesDataCore;
 import org.sxi.vo.Article;
 
 import java.io.File;
+import java.io.IOException;
 
 public class ArticleBiz {
 
@@ -27,7 +28,7 @@ public class ArticleBiz {
         String filePath = PropertiesDataCore.getStringProperty("post.root.path") + article.getFileName() + ".md";
         File file = new File(filePath);
         if (!file.exists()) {
-            throw new BizException("要编辑的文章不存在");
+            System.out.println("要编辑的文章不存在, 立即新建" + filePath);
         }
         
         // 调用数据层方法编辑文章

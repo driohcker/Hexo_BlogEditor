@@ -42,6 +42,8 @@ public class ArticleUtil {
         }
         
         Article article = new Article();
+
+        article.setFileName(file.getName().substring(0, file.getName().lastIndexOf(".")));
         
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"))) {
             String line;
@@ -210,7 +212,7 @@ public class ArticleUtil {
         }
         
         // 生成文件名（清理特殊字符）
-        String fileName = article.getTitle().trim()
+        String fileName = article.getFileName().trim()
                 .replaceAll("[^a-zA-Z0-9\\u4e00-\\u9fa5_-]", "") + ".md";
         
         // 默认保存路径（当前目录）

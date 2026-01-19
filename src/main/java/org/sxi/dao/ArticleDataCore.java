@@ -105,8 +105,8 @@ public class ArticleDataCore {
 
     public static Result addArticle(Article article){
         try {
-            ArticleUtil.saveArticleToFile(article);
-            articleDataCore.put(article.getFileName(), article);
+            String filename_md = ArticleUtil.saveArticleToFile(article).getName();
+            articleDataCore.put(filename_md.substring(0, filename_md.lastIndexOf(".")), article);
         } catch (IOException e) {
             throw new BizException("新建文件错误");
         }
@@ -121,10 +121,10 @@ public class ArticleDataCore {
     public static Result editArticle(Article article){
         try {
             // 保存文章到文件
-            ArticleUtil.saveArticleToFile(article);
-            
+            String filename_md = ArticleUtil.saveArticleToFile(article).getName();
+
             // 更新内存中的文章数据
-            articleDataCore.put(article.getFileName(), article);
+            articleDataCore.put(filename_md.substring(0, filename_md.lastIndexOf(".")), article);
 
             return Result.ok("编辑文章成功");
         } catch (IOException e) {
