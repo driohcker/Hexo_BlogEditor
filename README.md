@@ -5,4 +5,5 @@
 java -jar 编译的jar包
 ```
 命令启动
-<img width="1400" height="1000" alt="1" src="https://github.com/user-attachments/assets/ec4d65e1-3d57-431b-bcc5-e9cbbe32cb2c" />
+<img width="1400" height="1000" alt="1" src="https://github.com/user-attachments/assets/a2b83d88-7a17-49e3-aa7c-ffe5ca1c5033" />
+
