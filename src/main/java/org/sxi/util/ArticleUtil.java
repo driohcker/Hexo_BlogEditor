@@ -80,8 +80,10 @@ public class ArticleUtil {
         if (article == null) {
             throw new IllegalArgumentException("无效的文章对象");
         }
-        
-        File file = new File(file_root_path + article.getTitle() + ".md");
+
+        file_root_path = PropertiesDataCore.getStringProperty("post.root.path");
+
+        File file = new File(file_root_path + article.getFileName() + ".md");
         if (!file.exists() || !file.isFile()) {
             throw new IOException("文件不存在: " + file.getAbsolutePath());
         }
@@ -214,7 +216,9 @@ public class ArticleUtil {
         // 生成文件名（清理特殊字符）
         String fileName = article.getFileName().trim()
                 .replaceAll("[^a-zA-Z0-9\\u4e00-\\u9fa5_-]", "") + ".md";
-        
+
+        file_root_path = PropertiesDataCore.getStringProperty("post.root.path");
+
         // 默认保存路径（当前目录）
         File file = new File(file_root_path + fileName);
         System.out.println("设置文件名：" + fileName);

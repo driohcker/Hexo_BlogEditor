@@ -123,9 +123,9 @@ public class FileUtil {
                 .toArray(String[]::new);
         
         System.out.println("目录下markdown文件数量：" + markdownFiles.length);
-        for (String file : markdownFiles) {
-            System.out.println("- " + file);
-        }
+//        for (String file : markdownFiles) {
+//            System.out.println("- " + file);
+//        }
         
         return markdownFiles;
     }

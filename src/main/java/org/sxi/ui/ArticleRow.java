@@ -22,6 +22,7 @@ public class ArticleRow extends JPanel {
     private String title;
     private String category;
     private String tags;
+    private String date;
 
     private AbstractButton viewBtn,editBtn,deleteBtn;
 
@@ -32,8 +33,12 @@ public class ArticleRow extends JPanel {
         // 处理空分类情况
         this.category = article.getCategories() != null && !article.getCategories().isEmpty() ?
                 article.getCategories().get(0) : "未分类";
+        // 处理空标签情况
         this.tags = article.getTags() != null && !article.getTags().isEmpty() ?
-                article.getTags().get(0) : "无标签";
+                String.join(", ", article.getTags()) : "无标签";
+        // 处理空日期情况
+        this.date = article.getDate() != null ?
+                new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm").format(article.getDate()) : "无日期";
         initComponents();
         initStyles();
         initEvents();
@@ -64,7 +69,7 @@ public class ArticleRow extends JPanel {
         titleLabel.setForeground(new Color(30, 41, 59));
         titleLabel.setVerticalAlignment(SwingConstants.CENTER);
 
-        // 分类 + 标签（中）
+        // 分类 + 标签 + 日期（中）
         JPanel metaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         metaPanel.setOpaque(false);
 
@@ -76,8 +81,13 @@ public class ArticleRow extends JPanel {
         tagsLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
         tagsLabel.setForeground(new Color(59, 130, 246));
 
+        JLabel dateLabel = new JLabel("发布 · " + date);
+        dateLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+        dateLabel.setForeground(new Color(148, 163, 184));
+
         metaPanel.add(categoryLabel);
         metaPanel.add(tagsLabel);
+        metaPanel.add(dateLabel);
 
         infoPanel.add(titleLabel, BorderLayout.WEST);
         infoPanel.add(metaPanel, BorderLayout.CENTER);
