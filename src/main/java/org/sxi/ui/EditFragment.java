@@ -377,7 +377,7 @@ public class EditFragment extends JPanel {
      * 插入标题
      */
     private void insertHeader(int level) {
-        String prefix = "#".repeat(level) + " ";
+        String prefix = repeat("#", level) + " ";
         String selectedText = textArea.getSelectedText();
         
         if (selectedText != null) {
@@ -970,4 +970,14 @@ public class EditFragment extends JPanel {
 
         return saveButton;
     }
+
+
+    public static String repeat(String str, int count) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            sb.append(str);
+        }
+        return sb.toString();
+    }
+
 }
