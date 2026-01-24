@@ -5,6 +5,8 @@ import org.sxi.vo.Article;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * 文章行组件（UI 美化版）
@@ -45,13 +47,13 @@ public class ArticleRow extends JPanel {
     }
 
     /**
-     * 初始化组件（同一行布局）
+     * 初始化组件（现代风格布局）
      */
     private void initComponents() {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(0, ROW_HEIGHT));
-        setMaximumSize(new Dimension(Integer.MAX_VALUE, ROW_HEIGHT));
+        setPreferredSize(new Dimension(0, 90)); // 增加高度以容纳更多内容
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
         setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(230, 232, 236)),
@@ -60,46 +62,109 @@ public class ArticleRow extends JPanel {
 
         /* ================= 左侧信息区 ================= */
 
-        JPanel infoPanel = new JPanel(new BorderLayout(20, 0));
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
         infoPanel.setOpaque(false);
 
-        // 标题（左）
+        // 标题（强调）
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("微软雅黑", Font.BOLD, 15));
+        titleLabel.setFont(new Font("微软雅黑", Font.BOLD, 16));
         titleLabel.setForeground(new Color(30, 41, 59));
-        titleLabel.setVerticalAlignment(SwingConstants.CENTER);
+        titleLabel.setAlignmentX(LEFT_ALIGNMENT);
 
-        // 分类 + 标签 + 日期（中）
-        JPanel metaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
+        // 元信息面板（分类 + 标签 + 日期）
+        JPanel metaPanel = new JPanel();
+        metaPanel.setLayout(new BoxLayout(metaPanel, BoxLayout.X_AXIS));
         metaPanel.setOpaque(false);
+        metaPanel.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel categoryLabel = new JLabel("分类 · " + category);
-        categoryLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-        categoryLabel.setForeground(new Color(100, 116, 139));
+        // 分类区域（固定宽度）
+        JPanel categoryPanel = new JPanel();
+        categoryPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        categoryPanel.setOpaque(false);
+        categoryPanel.setPreferredSize(new Dimension(150, 24));
+        categoryPanel.setMaximumSize(new Dimension(150, 24));
+        
+        JLabel fromLabel = new JLabel("From");
+        fromLabel.setFont(new Font("微软雅黑", Font.PLAIN, 11));
+        fromLabel.setForeground(new Color(148, 163, 184));
+        
+        JPanel categoryBadge = new JPanel();
+        categoryBadge.setLayout(new FlowLayout(FlowLayout.CENTER, 6, 2));
+        categoryBadge.setBackground(new Color(241, 245, 249));
+        categoryBadge.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
+        
+        JLabel categoryLabel = new JLabel(category);
+        categoryLabel.setFont(new Font("微软雅黑", Font.PLAIN, 11));
+        categoryLabel.setForeground(new Color(59, 130, 246));
+        
+        categoryBadge.add(categoryLabel);
+        categoryPanel.add(fromLabel);
+        categoryPanel.add(Box.createHorizontalStrut(4));
+        categoryPanel.add(categoryBadge);
 
-        JLabel tagsLabel = new JLabel("标签 · " + tags);
-        tagsLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-        tagsLabel.setForeground(new Color(59, 130, 246));
+        // 标签区域（固定宽度）
+        JPanel tagsPanel = new JPanel();
+        tagsPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
+        tagsPanel.setOpaque(false);
+        tagsPanel.setPreferredSize(new Dimension(400, 24));
+        tagsPanel.setMaximumSize(new Dimension(400, 24));
+        
+        if (!tags.equals("无标签")) {
+            String[] tagArray = tags.split(", ");
+            for (String tag : tagArray) {
+                JPanel tagBadge = new JPanel();
+                tagBadge.setLayout(new FlowLayout(FlowLayout.CENTER, 6, 2));
+                tagBadge.setBackground(getTagColor(tag)); // 为每个标签生成不同颜色
+                tagBadge.setBorder(BorderFactory.createEmptyBorder(2, 8, 2, 8));
+                
+                JLabel tagLabel = new JLabel(tag);
+                tagLabel.setFont(new Font("微软雅黑", Font.PLAIN, 11));
+                tagLabel.setForeground(Color.WHITE);
+                
+                tagBadge.add(tagLabel);
+                tagsPanel.add(tagBadge);
+                tagsPanel.add(Box.createHorizontalStrut(6));
+            }
+        } else {
+            JLabel noTagsLabel = new JLabel("无标签");
+            noTagsLabel.setFont(new Font("微软雅黑", Font.PLAIN, 11));
+            noTagsLabel.setForeground(new Color(148, 163, 184));
+            tagsPanel.add(noTagsLabel);
+        }
 
-        JLabel dateLabel = new JLabel("发布 · " + date);
+        // 日期区域（固定宽度，居右）
+        JPanel datePanel = new JPanel();
+        datePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        datePanel.setOpaque(false);
+        datePanel.setPreferredSize(new Dimension(150, 24));
+        datePanel.setMaximumSize(new Dimension(150, 24));
+        
+        JLabel dateLabel = new JLabel(getFormattedDate());
         dateLabel.setFont(new Font("微软雅黑", Font.PLAIN, 12));
         dateLabel.setForeground(new Color(148, 163, 184));
+        datePanel.add(dateLabel);
 
-        metaPanel.add(categoryLabel);
-        metaPanel.add(tagsLabel);
-        metaPanel.add(dateLabel);
+        // 添加元信息组件
+        metaPanel.add(categoryPanel);
+        metaPanel.add(Box.createHorizontalStrut(10));
+        metaPanel.add(tagsPanel);
+        metaPanel.add(Box.createHorizontalGlue());
+        metaPanel.add(datePanel);
 
-        infoPanel.add(titleLabel, BorderLayout.WEST);
-        infoPanel.add(metaPanel, BorderLayout.CENTER);
+        // 添加到信息面板
+        infoPanel.add(titleLabel);
+        infoPanel.add(Box.createVerticalStrut(12));
+        infoPanel.add(metaPanel);
 
         /* ================= 右侧按钮区 ================= */
 
         JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 0));
         actionPanel.setOpaque(false);
 
-         viewBtn = createActionButton("查看");
-         editBtn = createActionButton("修改");
-         deleteBtn = createActionButton("删除");
+        viewBtn = createActionButton("查看");
+        editBtn = createActionButton("修改");
+        deleteBtn = createActionButton("删除");
 
         actionPanel.add(viewBtn);
         actionPanel.add(editBtn);
@@ -109,6 +174,63 @@ public class ArticleRow extends JPanel {
 
         add(infoPanel, BorderLayout.CENTER);
         add(actionPanel, BorderLayout.EAST);
+    }
+    
+    /**
+     * 根据标签生成颜色（固定算法，确保同一标签始终为同一颜色）
+     */
+    private Color getTagColor(String tag) {
+        // 预设的鲜艳颜色
+        Color[] colors = {
+            new Color(239, 83, 80), // 红色
+            new Color(255, 112, 67), // 橙色
+            new Color(255, 193, 7),  // 黄色
+            new Color(76, 175, 80),  // 绿色
+            new Color(25, 118, 210), // 蓝色
+            new Color(103, 58, 183), // 紫色
+            new Color(233, 30, 99),  // 粉色
+            new Color(0, 188, 212)   // 青色
+        };
+        
+        // 根据标签的哈希码选择颜色，确保同一标签始终为同一颜色
+        int hash = tag.hashCode();
+        int index = Math.abs(hash) % colors.length;
+        return colors[index];
+    }
+    
+    /**
+     * 格式化日期，简化显示
+     */
+    private String getFormattedDate() {
+        if (article.getDate() == null) {
+            return "无日期";
+        }
+        
+        Date now = new Date();
+        Calendar articleCal = Calendar.getInstance();
+        articleCal.setTime(article.getDate());
+        Calendar nowCal = Calendar.getInstance();
+        nowCal.setTime(now);
+        
+        int articleYear = articleCal.get(Calendar.YEAR);
+        int nowYear = nowCal.get(Calendar.YEAR);
+        int articleMonth = articleCal.get(Calendar.MONTH) + 1;
+        int nowMonth = nowCal.get(Calendar.MONTH) + 1;
+        int articleDay = articleCal.get(Calendar.DAY_OF_MONTH);
+        int nowDay = nowCal.get(Calendar.DAY_OF_MONTH);
+        
+        // 如果是今天
+        if (articleYear == nowYear && articleMonth == nowMonth && articleDay == nowDay) {
+            return new java.text.SimpleDateFormat("HH:mm").format(article.getDate());
+        }
+        // 如果是今年
+        else if (articleYear == nowYear) {
+            return new java.text.SimpleDateFormat("MM月dd日 HH:mm").format(article.getDate());
+        }
+        // 其他情况
+        else {
+            return new java.text.SimpleDateFormat("yyyy年MM月dd日").format(article.getDate());
+        }
     }
 
     /**

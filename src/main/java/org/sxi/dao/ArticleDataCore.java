@@ -29,7 +29,7 @@ public class ArticleDataCore {
     // 标签索引
     private static Map<String, List<Article>> tagIndex = new HashMap<>();
 
-    private static String file_root_path = PropertiesDataCore.getStringProperty("post.root.path");
+    private static String file_root_path = PropertiesDataCore.getStringProperty("post.root.path") + File.separator;
 
     static String[] files;
 

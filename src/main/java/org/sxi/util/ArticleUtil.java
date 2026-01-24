@@ -27,7 +27,7 @@ public class ArticleUtil {
     // 日期格式
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    private static String file_root_path = PropertiesDataCore.getStringProperty("post.root.path");
+    private static String file_root_path = PropertiesDataCore.getStringProperty("post.root.path") + File.separator;
     
     /**
      * 从文件中读取文章信息（不包含内容）
@@ -38,7 +38,8 @@ public class ArticleUtil {
      */
     public static Article readArticleFromFile(File file) throws IOException, ParseException {
         if (file == null || !file.exists() || !file.isFile()) {
-            throw new IllegalArgumentException("无效的文件对象: " + file.getName());
+            //throw new IllegalArgumentException("无效的文件对象: " + file.getName());
+            System.out.println("无效的文件对象: " + file.getName());
         }
         
         Article article = new Article();
